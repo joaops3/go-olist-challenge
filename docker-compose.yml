@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # db:
+  #   build:
+  #     context: .
+  #     dockerfile: DockerFileMongo
+  #   restart: always
+  #   environment:
+  #     MONGO_INITDB_ROOT_PASSWORD: root
+  #     MONGO_REPLICA_HOST: db
+  #     MONGODB_DATABASE: challenge
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - ./mongodb_data:/bitnami/mongodb
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./mongodb_data:/data/db
