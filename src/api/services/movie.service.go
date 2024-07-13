@@ -38,8 +38,8 @@ func (s *MovieService) UploadCsv(file []string) (bool, error) {
 
 	movie := models.NewMovieModel(file[1], file[2])
     
-	result, err := s.Repository.Save(movie)
-	fmt.Printf("%v",result)
+	fmt.Printf("%v",file)
+	_, err := s.Repository.Create(movie)
 	if err != nil {
 		return false, err
 	}

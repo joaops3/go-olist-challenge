@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/csv"
 	"io"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joaops3/go-olist-challenge/src/api/services"
@@ -99,26 +100,57 @@ func (c *MovieController) UploadMovieCsv(ctx *gin.Context) {
         helpers.SendError(ctx, 500, "Erro ao ler arquivo")
         return
     }
-    for {
-        line, err := csvReader.Read()
-        if err != nil && err != io.EOF {
-            helpers.SendError(ctx, 500, "Erro ao ler arquivo")
-            return
-        }
-     
-        if err == io.EOF {
-            break
-        }
+    var wg sync.WaitGroup
 
-       go  c.MovieService.UploadCsv(line)
-       if err != nil {
-            helpers.SendError(ctx, 500, err.Error())
-            return
+    channel := make(chan []string, 10)
+    errorsCh := make(chan error)
+  
+      
+    go func() {
+        defer close(channel)
+        for {
+            line, err := csvReader.Read()
+            if err != nil {
+                if err == io.EOF {
+                    return
+                }
+                errorsCh <- err
+                return
+            }
+            channel <- line
         }
-    }
+    }()
 
-	helpers.SendSuccess(ctx, "success", true)
-	return
+    go func() {
+        defer close(errorsCh)
+        for line := range channel {
+            wg.Add(1)
+            go func(value []string) {
+                defer wg.Done()
+                _, err := c.MovieService.UploadCsv(value)
+                if err != nil {
+                    select {
+                        case errorsCh <- err:
+                    default:
+                    }
+                }
+            }(line)
+        
+        }
+        wg.Wait()
+    }()
+
+  
+    
+    for err := range errorsCh {
+		if err != nil {
+			helpers.SendError(ctx, 422, err.Error())
+			return
+		}
+	}
+
+    helpers.SendSuccess(ctx, "success", true)
+    return
 }
 
 

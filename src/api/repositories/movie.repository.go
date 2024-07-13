@@ -24,7 +24,7 @@ func NewMovieRepository(modelDb *mongo.Collection) *MovieRepository {
 }
 
 
-func (r *MovieRepository) Save(model *models.MovieModel) (*models.MovieModel, error) {
+func (r *MovieRepository) Save( model *models.MovieModel) (*models.MovieModel, error) {
 	filter := bson.M{"_id": model.ID}
 	update := bson.M{"$set": model }
 	opts := options.FindOneAndUpdate().SetUpsert(true)
