@@ -1,6 +1,6 @@
 FROM golang:1.21.4
 
-WORKDIR /go/src
+WORKDIR /go/internal
 ENV PATH="/go/bin:${PATH}"
 
 COPY . .

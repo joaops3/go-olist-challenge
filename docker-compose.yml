@@ -4,7 +4,7 @@ services:
   # db:
   #   build:
   #     context: .
-  #     dockerfile: DockerFileMongo
+  #     dockerfile: DockerFileMongoReplica
   #   restart: always
   #   environment:
   #     MONGO_INITDB_ROOT_PASSWORD: root

@@ -1,9 +1,11 @@
 package server
 
 import (
-	"github.com/joaops3/go-olist-challenge/src/api/router"
-	config "github.com/joaops3/go-olist-challenge/src/configs"
-	"github.com/joaops3/go-olist-challenge/src/data/db"
+	"context"
+
+	"github.com/joaops3/go-olist-challenge/internal/api/router"
+	config "github.com/joaops3/go-olist-challenge/internal/configs"
+	"github.com/joaops3/go-olist-challenge/internal/data/db"
 )
 
 type HttpServer struct {
@@ -12,8 +14,8 @@ type HttpServer struct {
 func (s *HttpServer) Serve() {
 	logger := config.GetLogger("MAIN")
 	config.LoadEnvFile()
-	_, err := db.InitDb()
-	// defer dbClient.Disconnect(context.Background())
+	dbClient, err := db.InitDb()
+	defer dbClient.Disconnect(context.Background())
 
 	if err != nil {
 		logger.Errorf(err.Error())

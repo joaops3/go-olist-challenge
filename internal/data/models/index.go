@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/joaops3/go-olist-challenge/src/data/db"
+	"github.com/joaops3/go-olist-challenge/internal/data/db"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

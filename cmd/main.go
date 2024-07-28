@@ -1,6 +1,6 @@
 package main
 
-import "github.com/joaops3/go-olist-challenge/src/api/server"
+import "github.com/joaops3/go-olist-challenge/internal/api/server"
 
 func main() { 
 	
