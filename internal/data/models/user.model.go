@@ -11,6 +11,7 @@ type UserModel struct {
 	*BaseModel `bson:",inline"`
 	Email      string `json:"email" bson:"email,omitempty"  `
 	Password   string `json:"password" bson:"password,omitempty"`
+	ProfileImg  *S3FileModel `json:"profileImg" bson:"profileImg,omitempty"`
 }
 
 type JwtResponse struct {

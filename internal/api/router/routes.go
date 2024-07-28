@@ -11,6 +11,7 @@ func InitializeRoutes(r *gin.Engine) {
 	
 	InitializeMoviesRoutes(r)
 	InitializeAuthRoutes(r)
+	InitializeUserRoutes(r)
 }
 
 func InitializeAuthRoutes(r *gin.Engine){
@@ -20,6 +21,14 @@ func InitializeAuthRoutes(r *gin.Engine){
 	routerGroup := r.Group("/auth")
 	routerGroup.POST("/signin", controller.SignIn)
 	routerGroup.POST("/signup",controller.SignUp)
+}
+
+func InitializeUserRoutes(r *gin.Engine){
+	service := services.NewUserService()
+	controller := controllers.InitUserController(service)
+
+	routerGroup := r.Group("/users")
+	routerGroup.PATCH("/profile-img", middlewares.RequireAuth, controller.UploadPhoto)
 }
 
 

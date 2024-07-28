@@ -42,9 +42,14 @@ func RequireAuth(c *gin.Context) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if time.Now().Unix() > claims["exp"].(int64) {
+		if exp, ok := claims["exp"].(float64); ok {
+			if time.Now().Unix() > int64(exp) {
+				c.AbortWithStatus(http.StatusUnauthorized)
+				return
+			}
+		} else {
 			c.AbortWithStatus(http.StatusUnauthorized)
-			return 
+			return
 		}
 
 		id := claims["sub"]

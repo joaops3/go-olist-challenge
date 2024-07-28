@@ -13,3 +13,4 @@ func (d *CreateUserDto) Validate() error {
 		validation.Field(&d.Password, validation.Required.Error("A Senha é obrigatório"), validation.Length(1, 50)),
 	)
 }
+
