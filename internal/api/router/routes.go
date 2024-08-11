@@ -12,6 +12,7 @@ func InitializeRoutes(r *gin.Engine) {
 	InitializeMoviesRoutes(r)
 	InitializeAuthRoutes(r)
 	InitializeUserRoutes(r)
+	InitializeWsRoutes(r)
 }
 
 func InitializeAuthRoutes(r *gin.Engine){
@@ -29,6 +30,14 @@ func InitializeUserRoutes(r *gin.Engine){
 
 	routerGroup := r.Group("/users")
 	routerGroup.PATCH("/profile-img", middlewares.RequireAuth, controller.UploadPhoto)
+}
+
+func InitializeWsRoutes(r *gin.Engine){
+	service := services.NewUserService()
+	controller := controllers.InitWSController(service)
+
+	routerGroup := r.Group("/ws")
+	routerGroup.GET("/:id",  controller.HandleWebsocket)
 }
 
 

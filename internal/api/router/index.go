@@ -6,11 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Initialize() {
+func Initialize() error {
 	r := gin.Default()
 	InitializeRoutes(r)
 	PORT := os.Getenv("PORT")
-	r.Run(PORT)
+	err := r.Run(PORT)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 

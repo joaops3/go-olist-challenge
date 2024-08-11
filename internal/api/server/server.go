@@ -11,17 +11,23 @@ import (
 type HttpServer struct {
 }
 
-func (s *HttpServer) Serve() {
+func (s *HttpServer) Serve() error{
 	logger := config.GetLogger("MAIN")
 	config.LoadEnvFile()
-	dbClient, err := db.InitDb()
+	dbClient, err := db.InitDb() 
 	defer dbClient.Disconnect(context.Background())
 
 	if err != nil {
 		logger.Errorf(err.Error())
-		panic("error main")
+		return err
 	}
-	router.Initialize()
+	err = router.Initialize()
+	if err != nil {
+		logger.Errorf(err.Error())
+		return err
+	}
+
+	return nil
 }
 
 func NewHttpServer() *HttpServer {

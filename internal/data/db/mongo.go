@@ -19,6 +19,12 @@ func InitializeMongo() (*mongo.Client, error) {
 	
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MONGO_URL))
 
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		logger.Errorf("ERROR MONGO: %v", err)
+		client.Disconnect(ctx)
+		panic(err)
+	}
 	
 	if err != nil {
 		logger.Errorf("ERROR MONGO: %v", err)

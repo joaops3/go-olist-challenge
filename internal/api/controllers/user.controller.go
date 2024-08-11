@@ -10,10 +10,15 @@ import (
 
 type UserController struct {
 	UserService services.UserServiceInterface
+
 }
 
 func InitUserController(userService services.UserServiceInterface) *UserController {
-	controller := &UserController{UserService: userService}
+	
+
+	controller := &UserController{
+		UserService: userService,
+	}
 	return controller
 }
 
@@ -52,3 +57,4 @@ func(c *UserController) UploadPhoto(ctx *gin.Context){
 	sendSuccess(ctx, "success", resp)
 	return
 }
+
