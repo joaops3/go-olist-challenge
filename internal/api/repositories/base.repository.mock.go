@@ -38,5 +38,9 @@ func (m *MockBaseRepository[T]) BaseUpdate(id string, dto any) (bool, error) {
 
 func (m *MockBaseRepository[T]) BaseSave(data *T) (*T, error) {
 	args := m.Called(data)
-	return data, args.Error(0)
+
+	if args.Get(0) != nil {
+       return args.Get(0).(*T), nil
+    }
+	return nil, args.Error(1)
 }

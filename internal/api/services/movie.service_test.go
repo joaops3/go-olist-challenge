@@ -1,29 +1,71 @@
 package services
 
 import (
+	"errors"
 	"testing"
 
+	"github.com/joaops3/go-olist-challenge/internal/api/dtos"
 	"github.com/joaops3/go-olist-challenge/internal/api/repositories"
 	"github.com/joaops3/go-olist-challenge/internal/data/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-func TestCreateMovie(t *testing.T) {
-	mockRepo := new(repositories.MockMovieRepository)
+func TestCreate(t *testing.T) {
 
-	mockRepo.On("Create", mock.AnythingOfType("*models.Movie")).Return(nil)
+	t.Run("Create Movie", func(t *testing.T) {
+		
+		mockRepo := new(repositories.MockMovieRepository)
+		// Initialize the base repository mock
+		mockRepo.MockBaseRepository = *new(repositories.MockBaseRepository[models.MovieModel])
+
+		// Mocked input (ensure it's a pointer)
+		input := models.NewMovieModel("Test", "Test")
+		mockRepo.MockBaseRepository.On("BaseSave", mock.AnythingOfType("*models.MovieModel")).Return(input, nil)
+
+		service := &MovieService{
+			Repository: mockRepo,
+		}
+
+		dto := dtos.CreateMovieDto{
+			Name:  "Test",
+			Genre: "Test",
+		}
+
+		output, err := service.Post(&dto)
+
+		assert.Nil(t, err)
+		assert.NotNil(t, output)
+		assert.Equal(t, "Test", output.Name)
+		assert.Equal(t, "Test", output.Genre)
+		mockRepo.AssertExpectations(t)
+	})
+	
 
 
-	input := models.NewMovieModel("Test", "Test")
+	t.Run("Create Movie Fail", func(t *testing.T) {
 
-	service := &MovieService{
-		Repository: mockRepo,
-	}
+		mockRepo := new(repositories.MockMovieRepository)
+		mockRepo.MockBaseRepository = *new(repositories.MockBaseRepository[models.MovieModel])
 
-	output, err := service.Repository.Create(input)
+		
+		mockRepo.MockBaseRepository.On("BaseSave", mock.AnythingOfType("*models.MovieModel")).Return(nil, errors.New("error"))
 
-	assert.Nil(t, err)
-	assert.NotNil(t, output)
-	mockRepo.AssertExpectations(t)
+		service := &MovieService{
+			Repository: mockRepo,
+		}
+
+		dto := dtos.CreateMovieDto{
+			Name:  "Test",
+			Genre: "Test",
+		}
+
+		_, err := service.Post(&dto)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, errors.New("error"), err)
+		mockRepo.AssertExpectations(t)
+	})
 }
+
+
