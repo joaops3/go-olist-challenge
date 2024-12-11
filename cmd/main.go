@@ -14,7 +14,7 @@ func main() {
 	s := server.NewHttpServer() 
 
 	go func() {
-		if err := s.Serve(); err != nil {
+		if _, err := s.Serve(); err != nil {
 			if !errors.Is(err, http.ErrServerClosed) {
 				panic(err)
 			}
