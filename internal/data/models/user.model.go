@@ -21,7 +21,7 @@ type JwtResponse struct {
 
 func GetDbUserCollection() *mongo.Collection {
 	Db := db.GetDb()
-	model := Db.Collection(COLLECTION_MOVIE)
+	model := Db.Collection(COLLECTION_USER)
 	return model
 }
 

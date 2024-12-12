@@ -35,7 +35,7 @@ func (c *AuthController) SignIn(ctx *gin.Context){
     data, err := c.AuthService.SignIn(&dto)
 
     if err != nil {
-       sendError(ctx, 400, err.Error())
+       sendError(ctx, 401, err.Error())
         return 
     }
 

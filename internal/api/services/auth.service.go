@@ -34,6 +34,10 @@ func (r *AuthService)SignIn(dto *dtos.SignInDto) (*models.JwtResponse, error) {
 		return nil, err
 	}
 
+	if found == nil {
+		return nil, errors.New("Invalid email or password")
+	}
+
 	err = bcrypt.CompareHashAndPassword([]byte(found.Password), []byte(dto.Password))
 
 	if err != nil {

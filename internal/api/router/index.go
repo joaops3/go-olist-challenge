@@ -11,6 +11,7 @@ func Initialize() (*gin.Engine, error) {
 	InitializeRoutes(r)
 	PORT := os.Getenv("PORT")
 	err := r.Run(PORT)
+	
 	if err != nil {
 		return nil, err
 	}
